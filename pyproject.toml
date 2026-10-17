@@ -5,14 +5,15 @@ build-backend = "hatchling.build"
 [project]
 name = "tiny-translator"
 version = "0.1.0"
-description = "A small, readable Transformer for machine translation (English to Arabic out of the box, any language pair)."
+description = "Tiny, readable Transformer for neural machine translation in PyTorch, built from scratch. English to Arabic out of the box, works for any language pair: BPE tokenizer, training, beam search, BLEU/chrF evaluation."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
 authors = [{ name = "Ismail Ben Alla" }]
 keywords = [
-  "machine-translation", "transformer", "seq2seq", "nmt", "pytorch", "arabic",
-  "english-arabic", "beam-search", "bpe", "attention", "from-scratch",
+  "machine-translation", "neural-machine-translation", "nmt", "translation", "transformer",
+  "encoder-decoder", "seq2seq", "attention", "pytorch", "from-scratch", "arabic", "english-arabic",
+  "bpe", "tokenizer", "beam-search", "label-smoothing", "sacrebleu", "nlp", "deep-learning",
 ]
 dependencies = [
   "torch>=2.2",
