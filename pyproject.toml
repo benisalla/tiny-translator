@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "tiny-translator"
+version = "0.1.0"
+description = "A small, readable Transformer for machine translation (English to Arabic out of the box, any language pair)."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Ismail Ben Alla" }]
+keywords = [
+  "machine-translation", "transformer", "seq2seq", "nmt", "pytorch", "arabic",
+  "english-arabic", "beam-search", "bpe", "attention", "from-scratch",
+]
+dependencies = [
+  "torch>=2.2",
+  "tokenizers>=0.15",
+]
+
+[project.optional-dependencies]
+data = ["datasets>=2.16"]
+eval = ["sacrebleu>=2.3"]
+dev = ["pytest>=8", "ruff>=0.9", "sacrebleu>=2.3"]
+
+[project.scripts]
+tinytranslator-prepare = "tinytranslator.prepare:main"
+tinytranslator-train = "tinytranslator.train:main"
+tinytranslator-translate = "tinytranslator.translate:main"
+tinytranslator-evaluate = "tinytranslator.evaluate:main"
+tinytranslator-average = "tinytranslator.average:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tinytranslator"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["B905"]  # zip() lengths are checked explicitly where it matters
