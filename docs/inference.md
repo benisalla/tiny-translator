@@ -4,15 +4,15 @@
 
 ```bash
 # one or more sentences
-tinytranslator-translate --checkpoint checkpoints/en-ar/best.pt \
+en2ar-translate --checkpoint checkpoints/en-ar/best.pt \
     --text "How are you?" --text "Where is the train station?"
 
 # a file, one sentence per line -> a file
-tinytranslator-translate --checkpoint checkpoints/en-ar/best.pt \
+en2ar-translate --checkpoint checkpoints/en-ar/best.pt \
     --input subtitles.en --output subtitles.ar
 
 # stdin -> stdout (pipes)
-cat subtitles.en | tinytranslator-translate --checkpoint checkpoints/en-ar/best.pt > subtitles.ar
+cat subtitles.en | en2ar-translate --checkpoint checkpoints/en-ar/best.pt > subtitles.ar
 ```
 
 | Flag | Default | Meaning |
@@ -28,7 +28,7 @@ line-aligned formats like subtitle text keep their alignment.
 ## 2. Python
 
 ```python
-from tinytranslator import load_checkpoint, translate, beam_translate
+from en_2_ar_translator import load_checkpoint, translate, beam_translate
 
 model, tokenizer, _ = load_checkpoint("checkpoints/en-ar/best.pt", device="cpu")
 
@@ -47,7 +47,7 @@ which is the fastest option for large files.
 
 ```bash
 pip install -e '.[eval]'
-tinytranslator-evaluate --checkpoint checkpoints/en-ar/best.pt --split test --beam-size 4 \
+en2ar-evaluate --checkpoint checkpoints/en-ar/best.pt --split test --beam-size 4 \
     --output test.hyp.ar
 ```
 

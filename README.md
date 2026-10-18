@@ -1,13 +1,13 @@
-# tiny-translator
+# English-to-Arabic Translator
 
-**A small, readable Transformer for machine translation: English → Arabic out of the box, any language pair by design.**
+**English → Arabic neural machine translation with a compact, readable Transformer built from scratch in PyTorch. The same code works for any language pair.**
 
-[![tests](https://github.com/benisalla/tiny-translator/actions/workflows/tests.yml/badge.svg)](https://github.com/benisalla/tiny-translator/actions/workflows/tests.yml)
+[![tests](https://github.com/benisalla/en_2_ar_translator/actions/workflows/tests.yml/badge.svg)](https://github.com/benisalla/en_2_ar_translator/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-ee4c2c.svg)](https://pytorch.org)
 
-tiny-translator is the encoder-decoder Transformer from *Attention Is All You
+`en_2_ar_translator` is the encoder-decoder Transformer from *Attention Is All You
 Need*, written from scratch in plain PyTorch, plus everything around it that you
 need to go from raw parallel text to translations:
 
@@ -19,10 +19,10 @@ need to go from raw parallel text to translations:
 
 ```mermaid
 flowchart LR
-    RAW["parallel text<br/>train.en / train.ar"] -- "tinytranslator-prepare" --> DATA[("clean splits<br/>+ shared BPE")]
-    DATA -- "tinytranslator-train" --> CKPT["best.pt<br/>(weights + tokenizer)"]
-    CKPT -- "tinytranslator-translate" --> OUT["How are you?<br/>→ كيف حالك؟"]
-    CKPT -- "tinytranslator-evaluate" --> SCORE["BLEU / chrF"]
+    RAW["parallel text<br/>train.en / train.ar"] -- "en2ar-prepare" --> DATA[("clean splits<br/>+ shared BPE")]
+    DATA -- "en2ar-train" --> CKPT["best.pt<br/>(weights + tokenizer)"]
+    CKPT -- "en2ar-translate" --> OUT["How are you?<br/>→ كيف حالك؟"]
+    CKPT -- "en2ar-evaluate" --> SCORE["BLEU / chrF"]
 ```
 
 English and Arabic are only the defaults. Language codes are just file
@@ -44,26 +44,26 @@ pip install -e '.[dev,data]'              # see docs/training.md for GPU torch
 pytest
 
 # 3. the whole pipeline on the built-in toy English -> Arabic set (CPU)
-tinytranslator-prepare --toy --out-dir data/toy
-tinytranslator-train --data-dir data/toy --preset tiny --max-steps 1500 --warmup-steps 200 \
+en2ar-prepare --toy --out-dir data/toy
+en2ar-train --data-dir data/toy --preset small --max-steps 1500 --warmup-steps 200 \
     --eval-every 500 --tokens-per-batch 1000 --device cpu --output-dir checkpoints/toy
-tinytranslator-translate --checkpoint checkpoints/toy/best.pt --text "three red bird"
+en2ar-translate --checkpoint checkpoints/toy/best.pt --text "three red bird"
 
 # 4. real English -> Arabic data (OPUS-100, 1M pairs), then train on a GPU
-tinytranslator-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config ar-en \
+en2ar-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config ar-en \
     --src-lang en --tgt-lang ar --out-dir data/en-ar
-tinytranslator-train --data-dir data/en-ar --src-lang en --tgt-lang ar --output-dir checkpoints/en-ar
+en2ar-train --data-dir data/en-ar --src-lang en --tgt-lang ar --output-dir checkpoints/en-ar
 
 # 5. use and score it
-tinytranslator-average checkpoints/en-ar/step_*.pt --output checkpoints/en-ar/averaged.pt
-tinytranslator-translate --checkpoint checkpoints/en-ar/averaged.pt --input subtitles.en --output subtitles.ar
-tinytranslator-evaluate --checkpoint checkpoints/en-ar/averaged.pt --beam-size 4
+en2ar-average checkpoints/en-ar/step_*.pt --output checkpoints/en-ar/averaged.pt
+en2ar-translate --checkpoint checkpoints/en-ar/averaged.pt --input subtitles.en --output subtitles.ar
+en2ar-evaluate --checkpoint checkpoints/en-ar/averaged.pt --beam-size 4
 ```
 
 From Python:
 
 ```python
-from tinytranslator import load_checkpoint, translate
+from en_2_ar_translator import load_checkpoint, translate
 
 model, tokenizer, _ = load_checkpoint("checkpoints/en-ar/best.pt")
 print(translate(model, tokenizer, ["Good morning!", "See you tomorrow."], beam_size=4))
@@ -71,7 +71,7 @@ print(translate(model, tokenizer, ["Good morning!", "See you tomorrow."], beam_s
 
 ## Results on the toy dataset
 
-Trained with the exact commands from the quick start (step 3): `--preset tiny`,
+Trained with the exact commands from the quick start (step 3): `--preset small`,
 1,500 steps on CPU, 2,000 synthetic training pairs (a 16-word English lexicon
 translated word by word into Arabic), scored on 100 unseen test pairs.
 
@@ -87,7 +87,7 @@ translated word by word into Arabic), scored on 100 unseen test pairs.
 | beam search (`--beam-size 4`) | 95.1 | 95.9 |
 
 ```
-$ tinytranslator-translate --checkpoint checkpoints/toy/best.pt \
+$ en2ar-translate --checkpoint checkpoints/toy/best.pt \
       --text "three red bird" --text "blue cat" --text "seven green dog one"
 ثلاثة أحمر طائر
 أزرق قطة
@@ -106,7 +106,7 @@ training budget (see [docs/data.md](docs/data.md#4-how-many-pairs-do-i-need)).
 
 | Guide | What is inside |
 |-------|----------------|
-| [docs/data.md](docs/data.md) | Folder layout, `tinytranslator-prepare` (own files / Hugging Face / toy), cleaning rules, the tokenizer, how much data you need |
+| [docs/data.md](docs/data.md) | Folder layout, `en2ar-prepare` (own files / Hugging Face / toy), cleaning rules, the tokenizer, how much data you need |
 | [docs/training.md](docs/training.md) | CPU vs GPU, the overfit check, effective batch size, resume, what gets written, every flag, Python API |
 | [docs/inference.md](docs/inference.md) | Translate sentences / files / pipes, beam vs greedy, BLEU and chrF evaluation |
 | [docs/architecture.md](docs/architecture.md) | The model with tensor shapes: embeddings, masks, pre-norm blocks, loss, learning-rate schedule, beam search |
@@ -116,23 +116,23 @@ training budget (see [docs/data.md](docs/data.md#4-how-many-pairs-do-i-need)).
 
 | Preset | Layers (enc = dec) | Width | Heads | Params (16k vocab) | Good for |
 |--------|--------------------|-------|-------|--------------------|----------|
-| `--preset tiny` | 2 | 128 | 4 | 3.0M | CPU, toy data, smoke tests |
+| `--preset small` | 2 | 128 | 4 | 3.0M | CPU, toy data, smoke tests |
 | `--n-embd 256 --n-heads 4 --n-layers 4` | 4 | 256 | 4 | 11.5M | one consumer GPU, ~1M pairs |
 | `--preset base` (default) | 6 | 512 | 8 | 52.3M | the Transformer-base shape |
 
 ## Repository layout
 
 ```
-src/tinytranslator/      the package (read in this order)
+src/en_2_ar_translator/      the package (read in this order)
   config.py              every hyperparameter: ModelConfig, DataConfig, TrainConfig
   tokenizer.py           shared BPE tokenizer (any language, any script)
   data.py                parallel files -> length-bucketed padded batches; toy dataset
   model.py               the Transformer: attention, masks, encoder, decoder
-  train.py               training loop + tinytranslator-train
-  translate.py           greedy / beam search + tinytranslator-translate
-  evaluate.py            BLEU / chrF + tinytranslator-evaluate
-  average.py             checkpoint averaging + tinytranslator-average
-  prepare.py             clean / split / tokenize a corpus + tinytranslator-prepare
+  train.py               training loop + en2ar-train
+  translate.py           greedy / beam search + en2ar-translate
+  evaluate.py            BLEU / chrF + en2ar-evaluate
+  average.py             checkpoint averaging + en2ar-average
+  prepare.py             clean / split / tokenize a corpus + en2ar-prepare
   checkpoint.py          self-contained save / load
 tests/                   43 tests, CPU only, no network (see docs/testing.md)
 docs/                    the guides above

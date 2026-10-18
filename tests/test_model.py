@@ -3,8 +3,8 @@ import math
 import pytest
 import torch
 
-from tinytranslator.config import ModelConfig
-from tinytranslator.model import Translator, sinusoidal_positions
+from en_2_ar_translator.config import ModelConfig
+from en_2_ar_translator.model import Translator, sinusoidal_positions
 
 
 def rand_ids(B, T, vocab=50, low=4):

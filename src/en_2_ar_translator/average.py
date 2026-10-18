@@ -1,9 +1,9 @@
-"""Average the weights of several checkpoints: ``tinytranslator-average``.
+"""Average the weights of several checkpoints: ``en2ar-average``.
 
 Averaging the last few checkpoints of a run is a cheap quality boost used
 since the original Transformer paper::
 
-    tinytranslator-average checkpoints/run/step_*.pt --output checkpoints/run/averaged.pt
+    en2ar-average checkpoints/run/step_*.pt --output checkpoints/run/averaged.pt
 """
 
 from __future__ import annotations

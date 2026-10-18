@@ -1,10 +1,10 @@
-"""Decoding: greedy (batched) and beam search, plus the ``tinytranslator-translate`` CLI.
+"""Decoding: greedy (batched) and beam search, plus the ``en2ar-translate`` CLI.
 
 Usage::
 
-    tinytranslator-translate --checkpoint checkpoints/run/best.pt --text "How are you?"
-    tinytranslator-translate --checkpoint checkpoints/run/best.pt --input sentences.en --output out.ar
-    echo "Good morning" | tinytranslator-translate --checkpoint checkpoints/run/best.pt
+    en2ar-translate --checkpoint checkpoints/run/best.pt --text "How are you?"
+    en2ar-translate --checkpoint checkpoints/run/best.pt --input sentences.en --output out.ar
+    echo "Good morning" | en2ar-translate --checkpoint checkpoints/run/best.pt
 """
 
 from __future__ import annotations
@@ -129,7 +129,7 @@ def pick_device(name: str = "auto") -> torch.device:
 def main(argv: list[str] | None = None) -> None:
     from .checkpoint import load_checkpoint
 
-    p = argparse.ArgumentParser(description="Translate sentences with a trained tiny-translator checkpoint.")
+    p = argparse.ArgumentParser(description="Translate sentences with a trained en_2_ar_translator checkpoint.")
     p.add_argument("--checkpoint", required=True, help="path to best.pt / last.pt / averaged.pt")
     src = p.add_mutually_exclusive_group()
     src.add_argument("--text", action="append", help="sentence to translate (repeatable)")

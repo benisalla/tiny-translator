@@ -1,8 +1,8 @@
 import pytest
 import torch
 
-from tinytranslator.data import ParallelDataset, read_parallel, write_lines
-from tinytranslator.prepare import clean_pairs, prepare, split_pairs
+from en_2_ar_translator.data import ParallelDataset, read_parallel, write_lines
+from en_2_ar_translator.prepare import clean_pairs, prepare, split_pairs
 
 
 def test_read_parallel_checks_alignment(tmp_path):
@@ -76,7 +76,7 @@ def test_split_pairs_sizes_and_disjoint():
 
 
 def test_prepare_writes_folder(tmp_path):
-    from tinytranslator.data import TOY_LEXICON
+    from en_2_ar_translator.data import TOY_LEXICON
 
     pairs = [(f"{en} {i}", f"{ar} {i}") for i, (en, ar) in enumerate(TOY_LEXICON.items())] * 10
     stats = prepare(pairs, str(tmp_path), "en", "ar", n_val=3, n_test=3, vocab_size=150)

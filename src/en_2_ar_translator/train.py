@@ -1,12 +1,12 @@
-"""Training loop and the ``tinytranslator-train`` CLI.
+"""Training loop and the ``en2ar-train`` CLI.
 
-    tinytranslator-train --data-dir data --src-lang en --tgt-lang ar --output-dir checkpoints/run
+    en2ar-train --data-dir data --src-lang en --tgt-lang ar --output-dir checkpoints/run
 
 Writes to ``--output-dir``:
 
 - ``last.pt``          latest weights + optimiser state (used by ``--resume``)
 - ``best.pt``          weights with the lowest validation loss so far
-- ``step_<N>.pt``      the last ``--keep-last`` evaluation checkpoints (for ``tinytranslator-average``)
+- ``step_<N>.pt``      the last ``--keep-last`` evaluation checkpoints (for ``en2ar-average``)
 - ``log.jsonl``        one JSON line per log / eval event
 """
 
@@ -181,7 +181,7 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--max-len", type=int, default=d.max_len, help="skip pairs longer than this many tokens")
 
     g = p.add_argument_group("model")
-    g.add_argument("--preset", choices=["base", "tiny"], default="base", help="tiny = 2 layers x 128 dims")
+    g.add_argument("--preset", choices=["base", "small"], default="base", help="small = 2 layers x 128 dims")
     g.add_argument("--n-embd", type=int, default=None, help=f"override the preset (base: {m.n_embd})")
     g.add_argument("--n-heads", type=int, default=None)
     g.add_argument("--n-layers", type=int, default=None)
@@ -211,7 +211,7 @@ def configs_from_args(args) -> tuple[ModelConfig, DataConfig, TrainConfig]:
         data_dir=args.data_dir, src_lang=args.src_lang, tgt_lang=args.tgt_lang, tokenizer=args.tokenizer,
         tokens_per_batch=args.tokens_per_batch, max_len=args.max_len,
     )  # fmt: skip
-    base = ModelConfig.tiny(vocab_size=1) if args.preset == "tiny" else ModelConfig()
+    base = ModelConfig.small(vocab_size=1) if args.preset == "small" else ModelConfig()
     overrides = {
         k: getattr(args, k) for k in ("n_embd", "n_heads", "n_layers", "dropout") if getattr(args, k) is not None
     }

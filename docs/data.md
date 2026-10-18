@@ -1,6 +1,6 @@
 # Data guide
 
-tiny-translator learns from **parallel text**: pairs of sentences that mean the
+This project learns from **parallel text**: pairs of sentences that mean the
 same thing in two languages. Everything is plain UTF-8 text, one sentence per
 line.
 
@@ -10,7 +10,7 @@ line.
 data/
   train.en   train.ar      # line i of train.en  <->  line i of train.ar
   val.en     val.ar        # used for the validation loss and best.pt
-  test.en    test.ar       # used by tinytranslator-evaluate
+  test.en    test.ar       # used by en2ar-evaluate
   tokenizer.json           # shared BPE vocabulary, learned from train.*
 ```
 
@@ -18,15 +18,15 @@ The suffixes are the language codes you pass as `--src-lang` / `--tgt-lang`.
 Nothing is hard-coded to English or Arabic: `train.fr` + `train.de` with
 `--src-lang fr --tgt-lang de` works the same way.
 
-## 2. Build the folder with `tinytranslator-prepare`
+## 2. Build the folder with `en2ar-prepare`
 
-`tinytranslator-prepare` cleans, de-duplicates, shuffles and splits a corpus,
+`en2ar-prepare` cleans, de-duplicates, shuffles and splits a corpus,
 then trains the tokenizer. Three ways to feed it:
 
 **a. The built-in toy set** (no download, synthetic English -> Arabic, 16 words):
 
 ```bash
-tinytranslator-prepare --toy --out-dir data/toy
+en2ar-prepare --toy --out-dir data/toy
 ```
 
 Use it to check that your install works and that the model can learn (see
@@ -36,11 +36,11 @@ Use it to check that your install works and that the model can learn (see
 
 ```bash
 # OPUS-100: 1M English-Arabic pairs (subtitles, web, religious and legal text...)
-tinytranslator-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config ar-en \
+en2ar-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config ar-en \
     --src-lang en --tgt-lang ar --out-dir data/en-ar
 
 # any other pair, e.g. English -> French
-tinytranslator-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config en-fr \
+en2ar-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config en-fr \
     --src-lang en --tgt-lang fr --out-dir data/en-fr
 ```
 
@@ -50,7 +50,7 @@ only), `Helsinki-NLP/un_pc`, `Helsinki-NLP/news_commentary`.
 **c. Your own aligned files** (e.g. exported subtitles, a TMX export, a CSV split in two):
 
 ```bash
-tinytranslator-prepare --src-file corpus.en --tgt-file corpus.ar \
+en2ar-prepare --src-file corpus.en --tgt-file corpus.ar \
     --src-lang en --tgt-lang ar --out-dir data/mine
 ```
 
@@ -75,7 +75,7 @@ tinytranslator-prepare --src-file corpus.en --tgt-file corpus.ar \
 
 ## 3. The tokenizer
 
-One BPE vocabulary covers both languages ([`tokenizer.py`](../src/tinytranslator/tokenizer.py)):
+One BPE vocabulary covers both languages ([`tokenizer.py`](../src/en_2_ar_translator/tokenizer.py)):
 
 - text is NFKC-normalised (unifies Arabic presentation forms, full-width
   characters, etc.), split on spaces SentencePiece-style (`▁` marks a word

@@ -1,7 +1,7 @@
 # Training guide
 
 ```bash
-tinytranslator-train --data-dir data/en-ar --src-lang en --tgt-lang ar --output-dir checkpoints/en-ar
+en2ar-train --data-dir data/en-ar --src-lang en --tgt-lang ar --output-dir checkpoints/en-ar
 ```
 
 ## 1. Before a long run: the overfit check
@@ -10,8 +10,8 @@ If the model cannot memorise 8 pairs, something is wrong with the data or the
 setup, and a long run would be wasted:
 
 ```bash
-tinytranslator-train --data-dir data/en-ar --src-lang en --tgt-lang ar \
-    --preset tiny --overfit 8 --max-steps 500 --warmup-steps 50 --eval-every 100 \
+en2ar-train --data-dir data/en-ar --src-lang en --tgt-lang ar \
+    --preset small --overfit 8 --max-steps 500 --warmup-steps 50 --eval-every 100 \
     --output-dir checkpoints/overfit
 ```
 
@@ -22,7 +22,7 @@ the printed sample translations should match the references.
 
 | Setup | Command |
 |-------|---------|
-| CPU | `--preset tiny --device cpu` (fine for the toy set and small experiments) |
+| CPU | `--preset small --device cpu` (fine for the toy set and small experiments) |
 | 1 GPU | default (`--device auto` picks CUDA, then Apple MPS, then CPU) |
 | small GPU / out of memory | lower `--tokens-per-batch` and raise `--accum-steps` to keep the same effective batch |
 
@@ -45,7 +45,7 @@ checkpoints/en-ar/
 ```
 
 Every checkpoint is self-contained: weights, configs **and the tokenizer**.
-`tinytranslator-translate --checkpoint best.pt` needs nothing else.
+`en2ar-translate --checkpoint best.pt` needs nothing else.
 
 At every evaluation the console shows the validation loss, the perplexity and
 the translation of a few sentences (the first validation sentences, or your own
@@ -54,7 +54,7 @@ with `--sample "How are you?" --sample "Where is the station?"`).
 ## 4. Resume
 
 ```bash
-tinytranslator-train ... --resume checkpoints/en-ar/last.pt --max-steps 200000
+en2ar-train ... --resume checkpoints/en-ar/last.pt --max-steps 200000
 ```
 
 The step counter, the learning-rate schedule, the optimiser state and the best
@@ -65,10 +65,10 @@ number of steps, not the number of extra steps.
 
 ```bash
 # average the last checkpoints (a small, free quality gain)
-tinytranslator-average checkpoints/en-ar/step_*.pt --output checkpoints/en-ar/averaged.pt
+en2ar-average checkpoints/en-ar/step_*.pt --output checkpoints/en-ar/averaged.pt
 
 # score on the test split (pip install -e '.[eval]')
-tinytranslator-evaluate --checkpoint checkpoints/en-ar/averaged.pt --beam-size 4
+en2ar-evaluate --checkpoint checkpoints/en-ar/averaged.pt --beam-size 4
 ```
 
 ## 6. Every flag
@@ -82,7 +82,7 @@ tinytranslator-evaluate --checkpoint checkpoints/en-ar/averaged.pt --beam-size 4
 | `--tokens-per-batch` | 4000 | tokens (incl. padding) per batch |
 | `--max-len` | 128 | pairs longer than this many tokens are skipped |
 | **model** | | |
-| `--preset` | `base` | `base` (6 × 512, ~52M) or `tiny` (2 × 128, ~3M) |
+| `--preset` | `base` | `base` (6 × 512, ~52M) or `small` (2 × 128, ~3M) |
 | `--n-embd`, `--n-heads`, `--n-layers`, `--dropout` | from preset | override the preset |
 | **optimisation** | | |
 | `--max-steps` | 100000 | total optimiser steps |
@@ -105,8 +105,8 @@ tinytranslator-evaluate --checkpoint checkpoints/en-ar/averaged.pt --beam-size 4
 ## 7. Python API
 
 ```python
-from tinytranslator import DataConfig, ModelConfig, TrainConfig
-from tinytranslator.train import train
+from en_2_ar_translator import DataConfig, ModelConfig, TrainConfig
+from en_2_ar_translator.train import train
 
 summary = train(
     ModelConfig(n_embd=256, n_heads=4, n_layers=4),

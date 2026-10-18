@@ -17,8 +17,8 @@ ruff format --check src tests
 ```
 
 No GPU and no internet needed: the tests build a synthetic English -> Arabic
-dataset in a temporary folder (`tinytranslator.data.write_toy_dataset`) and
-train tiny models on it.
+dataset in a temporary folder (`en_2_ar_translator.data.write_toy_dataset`) and
+train small models on it.
 
 | File | What it proves |
 |------|----------------|
@@ -32,11 +32,11 @@ train tiny models on it.
 ## 2. Toy end-to-end run
 
 ```bash
-tinytranslator-prepare --toy --out-dir data/toy
-tinytranslator-train --data-dir data/toy --preset tiny --max-steps 1500 --warmup-steps 200 \
+en2ar-prepare --toy --out-dir data/toy
+en2ar-train --data-dir data/toy --preset small --max-steps 1500 --warmup-steps 200 \
     --eval-every 500 --tokens-per-batch 1000 --device cpu --output-dir checkpoints/toy
-tinytranslator-translate --checkpoint checkpoints/toy/best.pt --text "three red bird" --text "blue cat"
-tinytranslator-evaluate --checkpoint checkpoints/toy/best.pt --beam-size 1
+en2ar-translate --checkpoint checkpoints/toy/best.pt --text "three red bird" --text "blue cat"
+en2ar-evaluate --checkpoint checkpoints/toy/best.pt --beam-size 1
 ```
 
 The toy language is a 16-word lexicon translated word by word, so a working
@@ -46,7 +46,7 @@ greedy decoding, see the README). If it does not, the install is broken.
 ## 3. Overfit check on your data
 
 ```bash
-tinytranslator-train --data-dir data/en-ar --src-lang en --tgt-lang ar --preset tiny \
+en2ar-train --data-dir data/en-ar --src-lang en --tgt-lang ar --preset small \
     --overfit 8 --max-steps 500 --warmup-steps 50 --eval-every 100 --output-dir checkpoints/overfit
 ```
 

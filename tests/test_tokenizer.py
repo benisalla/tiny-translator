@@ -1,4 +1,4 @@
-from tinytranslator.tokenizer import Tokenizer
+from en_2_ar_translator.tokenizer import Tokenizer
 
 
 def test_special_token_ids(toy_tokenizer):

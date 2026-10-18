@@ -3,9 +3,9 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tiny-translator"
+name = "en_2_ar_translator"
 version = "0.1.0"
-description = "Tiny, readable Transformer for neural machine translation in PyTorch, built from scratch. English to Arabic out of the box, works for any language pair: BPE tokenizer, training, beam search, BLEU/chrF evaluation."
+description = "English-to-Arabic neural machine translation with a compact, readable Transformer built from scratch in PyTorch. Works for any language pair: BPE tokenizer, training, beam search, BLEU/chrF evaluation."
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.10"
@@ -26,14 +26,14 @@ eval = ["sacrebleu>=2.3"]
 dev = ["pytest>=8", "ruff>=0.9", "sacrebleu>=2.3"]
 
 [project.scripts]
-tinytranslator-prepare = "tinytranslator.prepare:main"
-tinytranslator-train = "tinytranslator.train:main"
-tinytranslator-translate = "tinytranslator.translate:main"
-tinytranslator-evaluate = "tinytranslator.evaluate:main"
-tinytranslator-average = "tinytranslator.average:main"
+en2ar-prepare = "en_2_ar_translator.prepare:main"
+en2ar-train = "en_2_ar_translator.train:main"
+en2ar-translate = "en_2_ar_translator.translate:main"
+en2ar-evaluate = "en_2_ar_translator.evaluate:main"
+en2ar-average = "en_2_ar_translator.average:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/tinytranslator"]
+packages = ["src/en_2_ar_translator"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

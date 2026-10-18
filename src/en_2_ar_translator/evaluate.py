@@ -1,8 +1,8 @@
-"""Score a checkpoint on a test split with BLEU and chrF: ``tinytranslator-evaluate``.
+"""Score a checkpoint on a test split with BLEU and chrF: ``en2ar-evaluate``.
 
-    tinytranslator-evaluate --checkpoint checkpoints/run/best.pt --data-dir data --split test
+    en2ar-evaluate --checkpoint checkpoints/run/best.pt --data-dir data --split test
 
-Needs ``sacrebleu`` (``pip install 'tiny-translator[eval]'``). For Arabic and
+Needs ``sacrebleu`` (``pip install 'en_2_ar_translator[eval]'``). For Arabic and
 other morphologically rich languages, chrF is usually more telling than BLEU.
 """
 
@@ -20,7 +20,7 @@ def score(hypotheses: list[str], references: list[str]) -> dict[str, float]:
     try:
         import sacrebleu
     except ImportError as e:  # pragma: no cover
-        raise SystemExit("evaluation needs sacrebleu: pip install 'tiny-translator[eval]'") from e
+        raise SystemExit("evaluation needs sacrebleu: pip install 'en_2_ar_translator[eval]'") from e
     return {
         "bleu": sacrebleu.corpus_bleu(hypotheses, [references]).score,
         "chrf": sacrebleu.corpus_chrf(hypotheses, [references]).score,

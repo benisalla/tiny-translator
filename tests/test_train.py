@@ -5,15 +5,15 @@ import os
 import pytest
 import torch
 
-from tinytranslator import average, evaluate
-from tinytranslator.checkpoint import load_checkpoint
-from tinytranslator.config import DataConfig, ModelConfig, TrainConfig
-from tinytranslator.data import read_parallel
-from tinytranslator.train import main as train_main
-from tinytranslator.train import noam_lr, smoothed_loss
-from tinytranslator.train import train as run_train
-from tinytranslator.translate import beam_translate, translate
-from tinytranslator.translate import main as translate_main
+from en_2_ar_translator import average, evaluate
+from en_2_ar_translator.checkpoint import load_checkpoint
+from en_2_ar_translator.config import DataConfig, ModelConfig, TrainConfig
+from en_2_ar_translator.data import read_parallel
+from en_2_ar_translator.train import main as train_main
+from en_2_ar_translator.train import noam_lr, smoothed_loss
+from en_2_ar_translator.train import train as run_train
+from en_2_ar_translator.translate import beam_translate, translate
+from en_2_ar_translator.translate import main as translate_main
 
 
 def test_noam_schedule_warms_up_then_decays():
@@ -31,7 +31,7 @@ def test_smoothed_loss_ignores_padding():
     assert full.item() == pytest.approx(manual.item(), rel=1e-5)
 
 
-def tiny_run(toy_dir, out_dir, max_steps, **train_kw):
+def small_run(toy_dir, out_dir, max_steps, **train_kw):
     model_cfg = ModelConfig(vocab_size=1, n_embd=64, n_heads=4, n_layers=2, dropout=0.0, max_len=64)
     data_cfg = DataConfig(data_dir=toy_dir, tokens_per_batch=600, max_len=64)
     train_cfg = TrainConfig(
@@ -43,9 +43,9 @@ def tiny_run(toy_dir, out_dir, max_steps, **train_kw):
 
 @pytest.fixture(scope="module")
 def trained(toy_dir, tmp_path_factory):
-    """Train a tiny model on the toy English -> Arabic data (~30 s on CPU)."""
+    """Train a small model on the toy English -> Arabic data (~30 s on CPU)."""
     out = tmp_path_factory.mktemp("run")
-    summary = tiny_run(toy_dir, out, max_steps=600)
+    summary = small_run(toy_dir, out, max_steps=600)
     return out, summary
 
 
@@ -121,7 +121,7 @@ def test_evaluate_cli(trained, capsys):
 def test_overfit_and_train_cli(toy_dir, tmp_path, capsys):
     out = tmp_path / "overfit"
     train_main([
-        "--data-dir", toy_dir, "--preset", "tiny", "--n-embd", "64", "--overfit", "8", "--max-steps", "150",
+        "--data-dir", toy_dir, "--preset", "small", "--n-embd", "64", "--overfit", "8", "--max-steps", "150",
         "--warmup-steps", "20", "--eval-every", "150", "--log-every", "50", "--device", "cpu",
         "--output-dir", str(out), "--sample", "one two",
     ])  # fmt: skip

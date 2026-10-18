@@ -1,8 +1,8 @@
 import torch
 
-from tinytranslator.config import ModelConfig
-from tinytranslator.model import Translator
-from tinytranslator.translate import beam_translate, greedy_translate, translate
+from en_2_ar_translator.config import ModelConfig
+from en_2_ar_translator.model import Translator
+from en_2_ar_translator.translate import beam_translate, greedy_translate, translate
 
 
 def untrained(tokenizer, max_len=32):

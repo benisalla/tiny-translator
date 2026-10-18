@@ -1,9 +1,9 @@
 import pytest
 import torch
 
-from tinytranslator.config import ModelConfig
-from tinytranslator.data import write_toy_dataset
-from tinytranslator.model import Translator
+from en_2_ar_translator.config import ModelConfig
+from en_2_ar_translator.data import write_toy_dataset
+from en_2_ar_translator.model import Translator
 
 
 @pytest.fixture(scope="session")
@@ -16,7 +16,7 @@ def toy_dir(tmp_path_factory):
 
 @pytest.fixture(scope="session")
 def toy_tokenizer(toy_dir):
-    from tinytranslator.tokenizer import Tokenizer
+    from en_2_ar_translator.tokenizer import Tokenizer
 
     return Tokenizer.load(f"{toy_dir}/tokenizer.json")
 

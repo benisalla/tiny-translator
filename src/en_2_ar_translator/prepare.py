@@ -1,15 +1,15 @@
-"""Build a training folder from raw parallel text: ``tinytranslator-prepare``.
+"""Build a training folder from raw parallel text: ``en2ar-prepare``.
 
 Two sources:
 
 1. Your own aligned files (line i of one file translates line i of the other)::
 
-       tinytranslator-prepare --src-file corpus.en --tgt-file corpus.ar \\
+       en2ar-prepare --src-file corpus.en --tgt-file corpus.ar \\
            --src-lang en --tgt-lang ar --out-dir data
 
 2. Any Hugging Face dataset with a ``translation`` column (needs ``pip install datasets``)::
 
-       tinytranslator-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config ar-en \\
+       en2ar-prepare --hf-dataset Helsinki-NLP/opus-100 --hf-config ar-en \\
            --src-lang en --tgt-lang ar --out-dir data --max-pairs 1000000
 
 Steps: clean (strip, drop empty / too long / badly length-matched pairs,
@@ -18,7 +18,7 @@ BPE tokenizer on the training split.
 
 3. A built-in synthetic English -> Arabic toy set (no download, trains on CPU)::
 
-       tinytranslator-prepare --toy --out-dir data/toy
+       en2ar-prepare --toy --out-dir data/toy
 """
 
 from __future__ import annotations
@@ -61,7 +61,7 @@ def iter_hf_pairs(name: str, config: str | None, src_lang: str, tgt_lang: str, s
     try:
         from datasets import load_dataset
     except ImportError as e:  # pragma: no cover
-        raise SystemExit("--hf-dataset needs the `datasets` package: pip install 'tiny-translator[data]'") from e
+        raise SystemExit("--hf-dataset needs the `datasets` package: pip install 'en_2_ar_translator[data]'") from e
     ds = load_dataset(name, config, split=split, streaming=True)
     for row in ds:
         tr = row["translation"]

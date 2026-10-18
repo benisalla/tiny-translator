@@ -38,7 +38,7 @@ class ModelConfig:
         return self.n_embd // self.n_heads
 
     @classmethod
-    def tiny(cls, vocab_size: int) -> ModelConfig:
+    def small(cls, vocab_size: int) -> ModelConfig:
         """A ~1-3M-parameter model (depending on the vocabulary) that trains on a laptop CPU (tests, smoke runs)."""
         return cls(vocab_size=vocab_size, n_embd=128, n_heads=4, n_layers=2, dropout=0.1, max_len=128)
 

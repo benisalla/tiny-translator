@@ -1,6 +1,6 @@
 import pytest
 
-from tinytranslator.config import DataConfig, ModelConfig, TrainConfig, from_dict, to_dict
+from en_2_ar_translator.config import DataConfig, ModelConfig, TrainConfig, from_dict, to_dict
 
 
 def test_head_size():

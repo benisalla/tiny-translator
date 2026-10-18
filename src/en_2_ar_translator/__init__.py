@@ -1,4 +1,4 @@
-"""tiny-translator: a small, readable Transformer for machine translation between any two languages."""
+"""English-to-Arabic Translator: neural machine translation with a compact Transformer (any language pair)."""
 
 from .checkpoint import load_checkpoint, save_checkpoint
 from .config import DataConfig, ModelConfig, TrainConfig

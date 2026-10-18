@@ -1,8 +1,8 @@
 # Architecture
 
-tiny-translator is the encoder-decoder Transformer from *Attention Is All You
+The model is the encoder-decoder Transformer from *Attention Is All You
 Need* (Vaswani et al., 2017), written in ~150 lines of PyTorch in
-[`model.py`](../src/tinytranslator/model.py), with three modern defaults:
+[`model.py`](../src/en_2_ar_translator/model.py), with three modern defaults:
 pre-norm residual blocks, a shared vocabulary with tied embeddings, and fused
 scaled-dot-product attention.
 
@@ -72,7 +72,7 @@ the warm-up length than the original post-norm layout.
 
 | Preset | n_embd | heads | layers (enc = dec) | params (16k vocab) | Use |
 |--------|--------|-------|--------------------|--------------------|-----|
-| `tiny` | 128 | 4 | 2 | ~3M | CPU, toy data, smoke tests |
+| `small` | 128 | 4 | 2 | ~3M | CPU, toy data, smoke tests |
 | `base` | 512 | 8 | 6 | ~52M | real training on a GPU |
 
 Any field can be overridden: `--n-embd 256 --n-heads 4 --n-layers 4` gives a
@@ -96,7 +96,7 @@ at norm 1.0.
 
 ## 6. Decoding
 
-[`translate.py`](../src/tinytranslator/translate.py):
+[`translate.py`](../src/en_2_ar_translator/translate.py):
 
 - **Greedy** (`--beam-size 1`): batched; at each step append the arg-max token,
   stop when every sentence has produced `</s>`.
@@ -108,6 +108,6 @@ at norm 1.0.
 
 ## 7. Checkpoint averaging
 
-`tinytranslator-average step_*.pt --output averaged.pt` averages the weights
+`en2ar-average step_*.pt --output averaged.pt` averages the weights
 of the last few evaluation checkpoints. This smooths out the noise of the last
 optimiser steps and typically gives a small BLEU gain for free.
